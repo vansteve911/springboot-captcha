@@ -34,7 +34,6 @@ public class CaptchaConfig extends DefaultCaptchaConfig {
     @Override
     @Bean
     public FactoryRegistry<CaptchaType, CacheProvider<String, CaptchaCode>> cacheProviderFactory() {
-        System.out.println(mobileCaptchaProperties.getExpireSeconds());
         return new DefaultFactoryRegistry<CaptchaType, CacheProvider<String, CaptchaCode>>()
                 .registerFactory(CaptchaType.MOBILE,
                         new RedisCacheProvider<>(mobileCaptchaProperties.getExpireSeconds(), redisTemplate))
