@@ -1,0 +1,25 @@
+group 'com.vansteve911.springboot'
+version '0.1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: "maven"
+
+ext {
+    springBootVersion = '2.0.0.RELEASE'
+}
+
+sourceCompatibility = 1.8
+
+repositories {
+    maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: rootProject.ext.springBootVersion
+    testCompile group:'org.springframework.boot', name: 'spring-boot-starter-test', version: rootProject.ext.springBootVersion
+    compile('com.google.guava:guava:24.0-jre')
+    compile('com.aliyun:aliyun-java-sdk-dysmsapi:1.0.0')
+    compile('com.aliyun:aliyun-java-sdk-core:3.3.1')
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: rootProject.ext.springBootVersion
+}

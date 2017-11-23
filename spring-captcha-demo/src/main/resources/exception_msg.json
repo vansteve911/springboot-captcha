@@ -1,0 +1,5 @@
+{
+  "GENERATE_FAILED": "验证码生成失败",
+  "GENERATE_TOO_FREQUENTLY": "请勿频繁请求验证码",
+  "SEND_FAILED": "验证码发送失败, 请稍后再试"
+}
