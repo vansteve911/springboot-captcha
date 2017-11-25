@@ -1,16 +1,18 @@
 springboot-captcha
 --
 
-基于SpringBoot的图片&短信（基于阿里云）的验证码方案封装。
+A SpringBoot-based tool for image & mobile captcha (using [Aliyun](https://help.aliyun.com/document_detail/59210.html)）
 
-# 基本需求
+[中文文档](https://github.com/vansteve911/springboot-captcha/wiki#springboot-captcha)
+
+# Requirements
 
 - JDK1.8
 - SpringBoot2
 
-# 使用
+# Usage
 
-## 1.引入依赖
+## 1.Add to dependencies
 
 - maven
 
@@ -29,11 +31,11 @@ dependencies {
 }
 ```
 
-## 2. 导入到你的SpringBoot项目中
+## 2. Import in your SpringBoot project
 
-### 如果你的项目使用JavaConfig：
+### For JavaConfig：
 
-新建Config类，继承自DefaultCaptchaConfig（或者参考DefaultCaptchaConfig自己实现一个），并且将CaptchaService声明为Bean。
+Create a @Configuration class which extends from `DefaultCaptchaConfig`, or implement your own configuration class refering to `DefaultCaptchaConfig`. The `CaptchaService` should be declared as a bean for either way you use.
 
 ```
 @Configuration
@@ -45,9 +47,10 @@ public class CaptchaConfig extends DefaultCaptchaConfig {
 }
 
 ```
-DefaultCaptchaConfig
 
-继承DefaultCaptchaConfig类的时候，你可以通过重写captchaGeneratorFactory或cacheProviderFactory两个方法，自定义不同类型验证码的生成器/缓存。如下是将生成短信验证码的缓存改为用redis实现（该实现也在spring-captcha中）：
+When extending `DefaultCaptchaConfig`，you can override the `captchaGeneratorFactory` or `cacheProviderFactory`method to customizing different types of captcha generater or cache provider.
+
+For example, you can use Redis as the cache provider(which is implemented in spring-captcha) for mobile captchas like this:
 
 ```
 @Override
@@ -62,49 +65,48 @@ public FactoryRegistry<CaptchaType, CacheProvider<String, CaptchaCode>> cachePro
 
 ```
 
-### 如果你的项目使用XMLConfig：
+### For old-plain XMLConfig:
 
-- 将DefaultCaptchaConfig声明为bean（或实现一个继承自DefaultCaptchaConfig的类并声明为bean）
-- 将CaptchaService声明为Bean
+- declare or extend `DefaultCaptchaConfig` as a bean
+- declare `CaptchaService` as a bean
 
 ```
   <bean name="captchaConfig" class="com.vansteve911.spring.captcha.config.DefaultCaptchaConfig"/>
   <bean name="captchaService" class="com.vansteve911.spring.captcha.service.CaptchaService"/>
 ```
 
-## 3. 修改配置
+## 3. Customizing properties
 
-### 在app.properties中指定验证码的配置
+###  customizing captcha configs in `app.properties`
 
-*也可以在任意载入了classpath的properties文件/环境变量中指定.*
+*You can also put these properties in any loaded resource file or env variables.*
 
 ```
-# 短信验证码配置
-captcha-mobile.codeLength={验证码长度}
-captcha-mobile.region={阿里云短信region}
-captcha-mobile.accessKeyId={阿里云短信key}
-captcha-mobile.accessKeySecret={阿里云短信secret}
-captcha-mobile.expireSeconds={缓存过期秒数}
+# mobile captcha config
+captcha-mobile.codeLength=4
+captcha-mobile.region=SAMPLE
+captcha-mobile.accessKeyId=SAMPLE
+captcha-mobile.accessKeySecret=SAMPLE
+captcha-mobile.expireSeconds=80
 # img captcha config
-captcha-mobile.codeLength={验证码长度}
-captcha-img.width={图片验证码宽度像素}
-captcha-img.height={图片验证码高度像素}
-captcha-img.fontSize={图片验证码字体大小}
+captcha-img.codeLength=6
+captcha-img.width=240
+captcha-img.height=60
 ```
 
-若使用库中自带的redis缓存（基于[spring-boot-starter-data-redis](https://spring.io/guides/gs/messaging-redis/)），则如下配置redis参数：
+When using the integrated redis cache with spring-captcha (based on [spring-boot-starter-data-redis](https://spring.io/guides/gs/messaging-redis/)), you can specify redis params in `app.properties` as below:
 
 ```
 spring.redis.host=127.0.0.1
 spring.redis.password=pwd
 spring.redis.port=6379
 spring.redis.database=0
-# 其他参数
+# other params
 ```
 
-### 修改短信模板
+### Modify the SMS template
  
- 阿里云短信发送需要指定模板的ID及格式等，在resource文件夹中创建sms_template.json文件定义：
+ Define signature, template code and content template in `sms_template.json` for sending Aliyun mobile captcha:
  
  ```
  {
@@ -114,17 +116,16 @@ spring.redis.database=0
 }
  ```
  
-### 自定义报错信息
+### Customizing exception messages:
  
- 在resource文件夹中创建sms_template.json文件定义验证码相关错误类型的报错信息：
+ Create `exception_msg.json` under resource directory to customize captcha exception messages:
  
  ```
  {
-  "GENERATE_FAILED": "验证码生成失败",
-  "GENERATE_TOO_FREQUENTLY": "请勿频繁请求验证码",
-  "SEND_FAILED": "验证码发送失败, 请稍后再试"
+  "GENERATE_FAILED": "failed to generate captcha",
+  "GENERATE_TOO_FREQUENTLY": "please do not generate captcha too frequently",
+  "SEND_FAILED": "failed to send captcha, please try again"
 }
  ```
 
-
-其他细节可参考spring-captcha-demo代码。
+More details are involved in source code of `spring-captcha-demo` project.
