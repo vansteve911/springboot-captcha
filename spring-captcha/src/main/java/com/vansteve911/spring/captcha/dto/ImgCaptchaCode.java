@@ -6,7 +6,8 @@ import java.awt.image.BufferedImage;
  * Created by vansteve911
  */
 public class ImgCaptchaCode extends CaptchaCode {
-    private BufferedImage bufferedImage;
+
+    private transient BufferedImage bufferedImage;
 
     public ImgCaptchaCode(BufferedImage bufferedImage) {
         this.bufferedImage = bufferedImage;

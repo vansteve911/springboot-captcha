@@ -1,0 +1,5 @@
+{
+  "signName": "阿里云短信测试专用",
+  "templateCode": "{your_code}",
+  "json": "{\"code\":\"%s\"}"
+}

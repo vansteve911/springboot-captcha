@@ -1,9 +1,11 @@
 package com.vansteve911.spring.captcha.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by vansteve911
  */
-public class CaptchaCode {
+public class CaptchaCode implements Serializable {
     protected String key;
     protected String value;
     protected Long createTime;

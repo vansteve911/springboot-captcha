@@ -29,8 +29,12 @@ public class CaptchaException extends RuntimeException {
         msgTypes = new EnumMap<>(map);
     }
 
+    public static String typeMsg(Type type) {
+        return msgTypes.get(type);
+    }
+
     public CaptchaException(Type type) {
-        super(msgTypes.get(type));
+        super(typeMsg(type));
     }
 
     public CaptchaException(String message) {

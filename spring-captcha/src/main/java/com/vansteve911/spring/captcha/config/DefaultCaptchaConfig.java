@@ -44,11 +44,11 @@ public class DefaultCaptchaConfig {
 
     @PostConstruct
     public void init() {
-        loadExceptionMsg();
+        loadExceptionMsg("exception_msg.json");
     }
 
-    private static void loadExceptionMsg() {
-        String json = CommonUtils.loadFile("exception_msg.json");
+    static void loadExceptionMsg(String fileName) {
+        String json = CommonUtils.loadFile(fileName);
         if (json == null) {
             return;
         }

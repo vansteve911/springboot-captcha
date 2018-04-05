@@ -68,7 +68,7 @@ public class MobileCaptchaCodeGenerator extends AbstractCaptchaCodeGenerator {
         smsTemplate = parseSmsTemplate(properties.getTemplateFile());
     }
 
-    private SmsTemplate parseSmsTemplate(String filepath) {
+    SmsTemplate parseSmsTemplate(String filepath) {
         String json = CommonUtils.loadFile(filepath);
         if (json != null) {
             SmsTemplate template = JsonUtils.fromJson(json, SmsTemplate.class);
@@ -85,9 +85,36 @@ public class MobileCaptchaCodeGenerator extends AbstractCaptchaCodeGenerator {
         private String templateCode;
         private String json;
 
+        public SmsTemplate() {
+        }
+
         public SmsTemplate(String signName, String templateCode, String json) {
             this.signName = signName;
             this.templateCode = templateCode;
+            this.json = json;
+        }
+
+        public String getSignName() {
+            return signName;
+        }
+
+        public void setSignName(String signName) {
+            this.signName = signName;
+        }
+
+        public String getTemplateCode() {
+            return templateCode;
+        }
+
+        public void setTemplateCode(String templateCode) {
+            this.templateCode = templateCode;
+        }
+
+        public String getJson() {
+            return json;
+        }
+
+        public void setJson(String json) {
             this.json = json;
         }
     }
@@ -152,18 +179,6 @@ public class MobileCaptchaCodeGenerator extends AbstractCaptchaCodeGenerator {
         if (outId != null) {
             request.setOutId(outId);
         }
-        return acsClient.getAcsResponse(request);
-    }
-
-    private QuerySendDetailsResponse querySendDetails(String mobile, String bizId, long pageSize, long currentPage) throws ClientException {
-        IAcsClient acsClient = getAcsClient();
-        QuerySendDetailsRequest request = new QuerySendDetailsRequest();
-        request.setPhoneNumber(mobile);
-        request.setBizId(bizId);
-        SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
-        request.setSendDate(ft.format(new Date()));
-        request.setPageSize(pageSize);
-        request.setCurrentPage(currentPage);
         return acsClient.getAcsResponse(request);
     }
 }
