@@ -1,5 +1,5 @@
 group 'com.vansteve911'
-version '0.1.0-SNAPSHOT'
+version '0.1.1'
 
 apply plugin: 'java'
 apply plugin: "maven"
@@ -22,4 +22,73 @@ dependencies {
     compile('com.aliyun:aliyun-java-sdk-dysmsapi:1.0.0')
     compile('com.aliyun:aliyun-java-sdk-core:3.3.1')
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: rootProject.ext.springBootVersion
+}
+
+if (project.hasProperty('release')) {
+
+    apply plugin: 'signing'
+
+    signing {
+        sign configurations.archives
+    }
+
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: mavenUser, password: mavenPassword)
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: mavenUser, password: mavenPassword)
+                }
+
+                pom.project {
+                    name 'springboot-captcha'
+                    packaging 'jar'
+                    // optionally artifactId can be defined here
+                    description 'A SpringBoot based mobile/image captcha tool.'
+                    url 'https://github.com/vansteve911/springboot-captcha'
+
+                    scm {
+                        connection 'scm:git:https://github.com/vansteve911/springboot-captcha.git'
+                        developerConnection 'scm:git:git@github.com:vansteve911/springboot-captcha.git'
+                        url 'https://github.com/vansteve911/springboot-captcha/tree/master'
+                    }
+
+                    licenses {
+                        license {
+                            name 'The MIT License (MIT)'
+                            url 'http://opensource.org/licenses/MIT'
+                            distribution 'repo'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'vansteve911'
+                            name 'Steve Van'
+                            email 'vansteve911@gmail.com'
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
