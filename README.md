@@ -3,6 +3,8 @@ springboot-captcha
 
 A SpringBoot-based tool for image & mobile captcha (using [Aliyun](https://help.aliyun.com/document_detail/59210.html)）
 
+[![Build Status](https://travis-ci.org/vansteve911/springboot-captcha.svg?branch=master)](https://travis-ci.org/vansteve911/springboot-captcha)
+
 [中文文档](https://github.com/vansteve911/springboot-captcha/wiki#springboot-captcha)
 
 # Requirements
