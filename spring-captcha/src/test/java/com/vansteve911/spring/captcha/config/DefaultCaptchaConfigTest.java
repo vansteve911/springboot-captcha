@@ -43,7 +43,7 @@ public class DefaultCaptchaConfigTest {
 
     @Test
     public void loadExceptionMsg() {
-        DefaultCaptchaConfig.loadExceptionMsg("src/test/resources/exception_msg.json");
+        DefaultCaptchaConfig.loadExceptionMsg("sample_exception_msg.json");
         assertTrue(checkTypeMsg(GENERATE_FAILED, "验证码生成失败") &&
                 checkTypeMsg(GENERATE_TOO_FREQUENTLY, "请勿频繁请求验证码") &&
                 checkTypeMsg(SEND_FAILED, "验证码发送失败, 请稍后再试"));

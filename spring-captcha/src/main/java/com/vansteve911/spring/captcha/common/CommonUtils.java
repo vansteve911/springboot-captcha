@@ -3,10 +3,11 @@ package com.vansteve911.spring.captcha.common;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by vansteve911 on 2018/3/23.
@@ -15,40 +16,31 @@ public class CommonUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(CommonUtils.class);
 
-    private static final Random random = new Random();
-
     public static int genRandomInt(int bound) {
-        refreshRandomSeedIfNeeded();
-        return random.nextInt(bound);
+        return ThreadLocalRandom.current().nextInt(bound);
     }
 
     public static int genRandomInt(int lowerBound, int upperBound) {
         if (lowerBound > upperBound) {
-            return -1;
+            int tmp = lowerBound;
+            lowerBound = upperBound;
+            upperBound = tmp;
         }
-        refreshRandomSeedIfNeeded();
-        return lowerBound + random.nextInt(upperBound - lowerBound);
+        return lowerBound + ThreadLocalRandom.current().nextInt(upperBound - lowerBound);
     }
 
     public static long genRandomLong() {
-        refreshRandomSeedIfNeeded();
-        return random.nextLong();
-    }
-
-    private static void refreshRandomSeedIfNeeded() {
-        long now = System.currentTimeMillis();
-        if (now % 100 == 0) {
-            random.setSeed(now);
-        }
+        return ThreadLocalRandom.current().nextLong();
     }
 
     public static String loadFile(String filename) {
         try {
-            Path path = Paths.get(filename);
-            if (!Files.exists(path)) {
+            URL url = CommonUtils.class.getClassLoader().getResource(filename);
+            if (url == null) {
                 logger.warn("file not exists: " + filename);
                 return null;
             }
+            Path path = Paths.get(url.toURI());
             return new String(Files.readAllBytes(path));
         } catch (Exception e) {
             logger.error("loadFile failed: " + filename);

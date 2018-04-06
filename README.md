@@ -20,14 +20,14 @@ A SpringBoot-based tool for image & mobile captcha (using [Aliyun](https://help.
 <dependency>
   <groupId>com.vansteve911</groupId>
   <artifactId>springboot-captcha</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.2</version>
 </dependency>
 ```
 - gradle
 
 ```
 dependencies {
-	compile('com.vansteve911:springboot-captcha:0.1.0-SNAPSHOT')
+	compile('com.vansteve911:springboot-captcha:0.1.2')
 }
 ```
 

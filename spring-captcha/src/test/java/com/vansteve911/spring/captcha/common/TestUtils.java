@@ -52,22 +52,17 @@ public class TestUtils {
                                              String methodName,
                                              Class<?>[] parameterTypes,
                                              Object[] args) {
-        Method method = null;
-        boolean originalAccessState = false;
         try {
-            method = object.getClass().getDeclaredMethod(methodName, parameterTypes);
-            originalAccessState = method.isAccessible();
+            Method method = object.getClass().getDeclaredMethod(methodName, parameterTypes);
+            boolean originalAccessState = method.isAccessible();
             method.setAccessible(true);
-            return method.invoke(object, args);
+            try {
+                return method.invoke(object, args);
+            } finally {
+                method.setAccessible(originalAccessState);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            if (method != null) {
-                try {
-                    method.setAccessible(originalAccessState);
-                } catch (Exception ignore) {
-                }
-            }
         }
     }
 

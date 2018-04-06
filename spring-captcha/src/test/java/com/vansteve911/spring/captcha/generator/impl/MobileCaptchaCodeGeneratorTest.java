@@ -27,6 +27,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 public class MobileCaptchaCodeGeneratorTest {
 
+    private static final int RESEND_INTERVALS = 2;
     private MobileCaptchaCodeGenerator generator;
     private MobileCaptchaProperties properties;
     private IAcsClient mockAcsClient;
@@ -47,6 +48,9 @@ public class MobileCaptchaCodeGeneratorTest {
     public void generateCaptchaCode() throws Exception {
         CaptchaCode code = generator.generateCaptchaCode("a");
         assertTrue(code != null && code.getValue().length() == properties.getCodeLength());
+        // check resend intervals
+        Thread.sleep(RESEND_INTERVALS * 1000 + 200);
+        assertTrue(generator.checkGenerateTimeInterval(code));
     }
 
     @Test
@@ -62,6 +66,7 @@ public class MobileCaptchaCodeGeneratorTest {
         p.setAccessKeyId("SAMPLE");
         p.setAccessKeySecret("SAMPLE");
         p.setTemplateFile("src/test/resources/sms_template.json");
+        p.setResendIntervals(RESEND_INTERVALS);
         p.setDebugMode(true);
         return p;
     }
